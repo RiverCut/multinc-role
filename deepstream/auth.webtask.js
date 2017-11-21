@@ -5,7 +5,7 @@
 var jwt = require('jsonwebtoken');
 var uuid = require('uuid').v4;
 
-module.exports = function(context, req, res) {
+module.exports = function(context, cb) {
   if(!context.data) return;
 
   function verifyToken(token) {
