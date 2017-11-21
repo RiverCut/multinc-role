@@ -18,7 +18,7 @@ module.exports = function(context, cb) {
   }
 
   var serverToken = context.secrets.SERVER_TOKEN;
-  var authData = context.data.authData;
+  var authData = context.body.authData;
   var generatedId = uuid();
 
   if(authData && authData.token) {
