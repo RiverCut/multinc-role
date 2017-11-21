@@ -3,7 +3,7 @@
  *  This is hosted by webtask.io to allow authentication via deepstream.
  */
 var jwt = require('jsonwebtoken');
-var uuid = require('uuid/v4');
+var uuid = require('uuid').v4;
 
 module.exports = function(context, req, res) {
   if(!context.data) return;
