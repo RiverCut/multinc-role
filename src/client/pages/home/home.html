@@ -6,7 +6,7 @@
 
     <ion-buttons end>
       <button ion-button (click)="handleLogin()">
-        Login
+        {{ authService.isAuthenticated() ? 'Play' : 'Login' }}
       </button>
     </ion-buttons>
   </ion-navbar>

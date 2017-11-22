@@ -14,17 +14,17 @@ declare namespace deepstreamIO {
 
         interface Options {
                 /**
-                 *A global merge strategy that is applied whenever two clients write to the same record at the same time. Can be overwritten on a per record level. Default merge strategies are exposed by the client constructor. It's also possible to write custom merge strategies as functions. You can find more on handling data conflicts here
+                 *A global merge strategy that is applied whenever two clients write to the same record at the same time. Can be overwritten on a per record level. Default merge strategies are exposed by the ds constructor. It's also possible to write custom merge strategies as functions. You can find more on handling data conflicts here
         Type: Function
         Default: MERGE_STRATEGIES.REMOTE_WINS
                  */
                 mergeStrategy?: MergeStrategy;
                 /**Specifies the number of milliseconds by which the time until the next reconnection attempt will be incremented after every unsuccessful attempt.
-        E.g.for 1500: if the connection is lost,the client will attempt to reconnect immediately, if that fails it will try again after 1.5 seconds, if that fails it will try again after 3 seconds and so on...
+        E.g.for 1500: if the connection is lost,the ds will attempt to reconnect immediately, if that fails it will try again after 1.5 seconds, if that fails it will try again after 3 seconds and so on...
         Type: Number
         Default: 4000 */
                 reconnectIntervalIncrement?: number;
-                /**The number of reconnection attempts until the client gives up and declares the connection closed.
+                /**The number of reconnection attempts until the ds gives up and declares the connection closed.
         Type: Number
         Default: 5 */
                 maxReconnectAttempts?: number;
@@ -41,7 +41,7 @@ declare namespace deepstreamIO {
         Type: Number
         Default: 2000 */
                 subscriptionTimeout?: number;
-                /**If your app sends a large number of messages in quick succession, the deepstream client will try to split them into smaller packets and send these every ms. This parameter specifies the number of messages after which deepstream sends the packet and queues the remaining messages. Set to Infinity to turn the feature off.
+                /**If your app sends a large number of messages in quick succession, the deepstream ds will try to split them into smaller packets and send these every ms. This parameter specifies the number of messages after which deepstream sends the packet and queues the remaining messages. Set to Infinity to turn the feature off.
         Type: Number
         Default: 100 */
                 maxMessagesPerPacket?: number;
@@ -49,11 +49,11 @@ declare namespace deepstreamIO {
         Type: Number
         Default: 16 */
                 timeBetweenSendingQueuedPackages?: number;
-                /**The number of milliseconds from the moment client.record.getRecord() is called until an error is thrown since no ack message has been received.
+                /**The number of milliseconds from the moment ds.record.getRecord() is called until an error is thrown since no ack message has been received.
         Type: Number
         Default: 1000 */
                 recordReadAckTimeout?: number;
-                /**The number of milliseconds from the moment client.record.getRecord() is called until an error is thrown since no data has been received.
+                /**The number of milliseconds from the moment ds.record.getRecord() is called until an error is thrown since no data has been received.
         Type: Number
         Default: 3000 */
                 recordReadTimeout?: number;
@@ -61,7 +61,7 @@ declare namespace deepstreamIO {
         Type: Number
         Default: 3000 */
                 recordDeleteTimeout?: number;
-                /**Whether the client should try to upgrade the transport from long-polling to something better, e.g. WebSocket.
+                /**Whether the ds should try to upgrade the transport from long-polling to something better, e.g. WebSocket.
         Type: Boolean
         Default: true */
                 upgrade?: boolean;
@@ -129,17 +129,17 @@ declare namespace deepstreamIO {
                 subscribe(callback: (data: any) => void, trggerNow?: boolean): void;
                 /**Removes a subscription previous made using record.subscribe(). Defining a path with unsubscribe removes that specific path, or with a callback, can remove it from generic subscriptions.
         Info:
-        unsubscribe is entirely a client-side operation. To notify the server that the app would no longer interested in the record, use discard() instead.
+        unsubscribe is entirely a ds-side operation. To notify the server that the app would no longer interested in the record, use discard() instead.
         Important:
         It is important to unsubscribe all callbacks that are registered when discarding a record. Just calling discard does not guarantee that callbacks will not be called.*/
                 unsubscribe(path: string, callback: (data: any) => void): void;
                 /**Removes a subscription previous made using record.subscribe() or all subscriptions if callback is null. Defining a path with unsubscribe removes that specific path, or with a callback, can remove it from generic subscriptions.
         Info:
-        unsubscribe is entirely a client-side operation. To notify the server that the app would no longer interested in the record, use discard() instead.
+        unsubscribe is entirely a ds-side operation. To notify the server that the app would no longer interested in the record, use discard() instead.
         Important:
         It is important to unsubscribe all callbacks that are registered when discarding a record. Just calling discard does not guarantee that callbacks will not be called.*/
                 unsubscribe(callback?: (data: any) => void): void;
-                /**Removes all change listerners and notifies the server that client no longer wants updates for this record if your application no longer requires the record. */
+                /**Removes all change listerners and notifies the server that ds no longer wants updates for this record if your application no longer requires the record. */
                 discard(): void;
                 /**This permanently deletes the record on the server for all users. */
                 delete(): void;
@@ -164,9 +164,9 @@ declare namespace deepstreamIO {
                 /**Registers a function that will be invoked whenever any changes to the list's contents occur. Optionally you can also pass true to execute the callback function straight away with the list's current entries. */
                 subscribe(callback: (entries: Array<string>) => void, trggerNow?: boolean): void;
                 /**Removes a subscription that was previously made using list.subscribe() or all subscriptions if callback is null.
-        Please Note: unsubscribe is purely a client side operation. To notify the server that the app no longer requires updates for this list use discard(). */
+        Please Note: unsubscribe is purely a ds side operation. To notify the server that the app no longer requires updates for this list use discard(). */
                 unsubscribe(callback?: (entries: Array<string>) => void): void;
-                /**Removes all change listeners and notifies the server that the client is no longer interested in updates for this list. */
+                /**Removes all change listeners and notifies the server that the ds is no longer interested in updates for this list. */
                 discard(): void;
                 /**Deletes the list on the server. This action deletes the list for all users from both cache and storage and is irreversible. */
                 delete(): void;
@@ -174,22 +174,22 @@ declare namespace deepstreamIO {
 
         interface RPCResponse {
                 /**
-                 *Succesfully complete a remote procedure call and sends data back to the requesting client.
+                 *Succesfully complete a remote procedure call and sends data back to the requesting ds.
         data can be any kind of serializable data, e.g. Objects, Numbers, Booleans or Strings
         If autoAck is disabled and the response is sent before the ack message, the request will still be completed and the ack message will be ignored.
                  */
                 send(data: any): void;
                 /**
-                 *Rejects the request. Rejections are not errors, but merely a means of saying "I'm busy at the moment, try another client". Upon receiving a rejection deepstream will try to re-route the request to another provider for the same RPC. If there are no more providers left to try, deepstream will send a NO_RPC_PROVIDER error to the client.
+                 *Rejects the request. Rejections are not errors, but merely a means of saying "I'm busy at the moment, try another ds". Upon receiving a rejection deepstream will try to re-route the request to another provider for the same RPC. If there are no more providers left to try, deepstream will send a NO_RPC_PROVIDER error to the ds.
                  */
                 reject(): void;
                 /**
-                 *Send an error to the client. errorMsg will be received as the first argument to the callback registered with client.rpc.make(). This will complete the RPC.
+                 *Send an error to the ds. errorMsg will be received as the first argument to the callback registered with ds.rpc.make(). This will complete the RPC.
                  */
                 error(errorMsg: string): void;
                 /**
                  *Explicitly acknowledges the receipt of a request.
-        This is usually done automatically, but can also be performed explicitly by setting response.autoAck = false and calling ack() later. This is useful when a client needs to perform an asynchronous operation to determine if it will accept or reject the request.
+        This is usually done automatically, but can also be performed explicitly by setting response.autoAck = false and calling ack() later. This is useful when a ds needs to perform an asynchronous operation to determine if it will accept or reject the request.
         Info
 
         Requests count as completed once send() or error() was called. Calling ack() after that won't do anything.
@@ -224,11 +224,11 @@ declare namespace deepstreamIO {
         interface EventStatic {
                 /**Subscribes to an event. Callback will receive the data passed to emit() */
                 subscribe(event: string, callback: (data: any) => void): void;
-                /**Unsubscribes from an event that was previously registered with subscribe(). This stops a client from receiving the event. */
+                /**Unsubscribes from an event that was previously registered with subscribe(). This stops a ds from receiving the event. */
                 unsubscribe(event: string, callback: (data: any) => void): void;
                 /**Sends the event to all subscribed clients */
                 emit(event: string, data: any): void;
-                /**Registers the client as a listener for event subscriptions made by other clients. This is useful to create "active" data providers - processes that only send events if clients are actually interested in them. You can find more about listening in the events tutorial
+                /**Registers the ds as a listener for event subscriptions made by other clients. This is useful to create "active" data providers - processes that only send events if clients are actually interested in them. You can find more about listening in the events tutorial
         The callback is invoked with three arguments:
         - eventName: The name of the event that has been matched against the provided pattern
         - isSubscribed: A boolean indicating whether the event is subscribed or unsubscribed
@@ -239,9 +239,9 @@ declare namespace deepstreamIO {
         }
 
         interface RPCStatic {
-                /** Registers the client as a provider for incoming RPCs of a specific name. The callback will be invoked when another client client.rpc.make().*/
+                /** Registers the ds as a provider for incoming RPCs of a specific name. The callback will be invoked when another ds ds.rpc.make().*/
                 provide(name: string, callback: (data:any, response: RPCResponse) => void): void;
-                /**Removes the client as a provider previously registered using provide(). */
+                /**Removes the ds as a provider previously registered using provide(). */
                 unprovide(name: string): void;
                 /**
                  * Executes a remote procedure call. callback will be invoked with the returned result or with an error if the RPC failed.
@@ -250,7 +250,7 @@ declare namespace deepstreamIO {
         }
 
         interface Presence {
-                /**Subscribes to presence events. Callback will receive the username of the newly added client*/
+                /**Subscribes to presence events. Callback will receive the username of the newly added ds*/
                 subscribe(callback: (username: string, isLoggedIn:boolean) => void): void;
                 /**Removes a previously registered presence callback*/
                 unsubscribe(callback: (username: string, isLoggedIn:boolean) => void): void;
@@ -277,7 +277,7 @@ declare namespace deepstreamIO {
                 listeners(event: string): any[];
                 /**Returns true if there are listeners registered for that event. */
                 hasListeners(event: string): boolean;
-                /**Authenticates the client against the server. To learn more about how authentication works, please have a look at the Security Overview.
+                /**Authenticates the ds against the server. To learn more about how authentication works, please have a look at the Security Overview.
                  *Callback will be called with: success (Boolean), data (Object).
                  */
         }

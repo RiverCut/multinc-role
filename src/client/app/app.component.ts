@@ -1,13 +1,16 @@
 import { Component, ViewChild } from '@angular/core';
 import { Events, Nav, NavController, Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+// import { StatusBar } from '@ionic-native/status-bar';
+// import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { AuthService } from '../providers/auth.service';
 import { DeepstreamService } from '../providers/deepstream.service';
 import { NotificationService } from '../providers/notification.service';
 import { LobbyPage } from '../pages/lobby/lobby';
+import { Observable } from 'rxjs/Observable';
+
+import 'rxjs/add/observable/timer';
 
 @Component({
   templateUrl: 'app.html'
@@ -17,10 +20,12 @@ export class MyApp {
 
   rootPage = HomePage;
 
+  private reconnect$: any;
+
   constructor(
     private platform: Platform,
-    private statusBar: StatusBar,
-    private splashScreen: SplashScreen,
+    // private statusBar: StatusBar,
+    // private splashScreen: SplashScreen,
     private notificationService: NotificationService,
     private authService: AuthService,
     private deepstreamService: DeepstreamService,
@@ -35,16 +40,17 @@ export class MyApp {
       });
 
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      // this.statusBar.styleDefault();
+      // this.splashScreen.hide();
     });
   }
 
   public listenForEvents() {
-    this.events.subscribe('multinc:authenticated', async (token) => {
+    this.events.subscribe('multinc:authenticated', async () => {
 
       try {
-        const loggedIn = await this.deepstreamService.login(token);
+        const loggedIn = await this.deepstreamService.login(this.authService.token);
+
         if(!loggedIn) {
           this.notificationService.alert({
             title: 'Unable to Connect',
@@ -53,7 +59,8 @@ export class MyApp {
           return;
         }
 
-        this.nav.setRoot(LobbyPage);
+        this.handleDeepstreamAuth();
+
       } catch(e) {
         this.notificationService.alert({
           title: 'Unable to Connect',
@@ -62,9 +69,28 @@ export class MyApp {
       }
     });
 
-    this.events.subscribe('multinc:deauthenticated', () => {
+    this.events.subscribe('multinc:deauthenticated', async (opts) => {
       this.nav.setRoot(HomePage);
+
+      try {
+        await this.deepstreamService.ds.leaveAll();
+      } catch(e) {}
+
+      if(opts.retry) {
+        this.reconnect$ = Observable.timer(0, 3000)
+          .subscribe(async () => {
+            try {
+              await this.deepstreamService.joinLobby();
+              this.reconnect$.unsubscribe();
+              this.handleDeepstreamAuth();
+            } catch(e) {}
+          });
+      }
     });
+  }
+
+  private handleDeepstreamAuth() {
+    this.nav.setRoot(LobbyPage);
   }
 
 }

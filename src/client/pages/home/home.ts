@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Events } from 'ionic-angular';
 
 import { AuthService } from '../../providers/auth.service';
-import { DeepstreamService } from '../../providers/deepstream.service';
 
 @Component({
   selector: 'page-home',

@@ -8,6 +8,39 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+  <ion-row>
+    <ion-col>Games</ion-col>
 
+    <ion-col no-padding class="chat-area" *ngIf="state">
+
+      <ion-row no-padding class="chat-header">
+        <ion-col no-padding>
+          <ion-toolbar color="secondary">
+            <ion-title>Chat - {{ state.lobby.users.length }} users online</ion-title>
+          </ion-toolbar>
+        </ion-col>
+      </ion-row>
+
+      <ion-row no-padding class="chat-output" #scrollArea>
+        <div class="message" *ngFor="let message of state.lobby.messages">
+          <span class="timestamp">{{ message.timestamp | date:'short' }}</span>
+          <span class="sender">{{ message.sender }}</span>
+          <span class="message">{{ message.message }}</span>
+        </div>
+      </ion-row>
+
+      <ion-row no-padding class="chat-input">
+        <ion-col no-padding col-10>
+          <ion-input [(ngModel)]="currentMessage" placeholder="Send a message..." (keyup.enter)="sendMessage()"></ion-input>
+        </ion-col>
+
+        <ion-col col-2 class="send-container">
+          <button ion-button color="primary" block (click)="sendMessage()">Send</button>
+        </ion-col>
+      </ion-row>
+
+    </ion-col>
+
+  </ion-row>
 </ion-content>

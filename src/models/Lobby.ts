@@ -9,6 +9,7 @@ export class Message extends Model {
 
 export class Lobby extends Model {
   messages: Message[] = [];
+  users: string[] = [];
 
   deserializeFrom(opts?) {
     super.deserializeFrom(opts);

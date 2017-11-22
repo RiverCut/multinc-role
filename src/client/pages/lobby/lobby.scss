@@ -1,3 +1,44 @@
 page-lobby {
 
+  .chat-area {
+    border: 1px solid #000;
+
+    .chat-output {
+      display: block;
+      min-height: calc(100vh - 60px - 43px - 56px) !important;
+      max-height: calc(100vh - 60px - 43px - 56px) !important;
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex-direction: column;
+      word-break: break-all;
+
+      .message {
+        padding: 5px;
+        user-select: text;
+
+        .timestamp {
+          font-size: 80%;
+        }
+
+        .sender {
+          margin-left: 5px;
+          font-weight: bold;
+        }
+
+        .message {
+          margin-left: 5px;
+        }
+      }
+    }
+
+    .chat-input {
+      border-top: 1px solid #000;
+      height: 45px !important;
+
+      .send-container {
+        padding-top: 0 !important;
+      }
+    }
+  }
+
 }

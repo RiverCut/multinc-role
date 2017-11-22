@@ -1,12 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the LobbyPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Component, ViewChild } from '@angular/core';
+import { DeepstreamService } from '../../providers/deepstream.service';
 
 @Component({
   selector: 'page-lobby',
@@ -14,11 +7,41 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class LobbyPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  @ViewChild('scrollArea') private scrollArea;
+
+  public currentMessage: string;
+
+  private update$;
+
+  get state() {
+    return this.deepstreamService.lobbyState;
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LobbyPage');
+  constructor(
+    private deepstreamService: DeepstreamService
+  ) {}
+
+  ngOnInit() {
+    this.update$ = this.state.onUpdate$.subscribe(() => {
+      this.scrollToBottom();
+    });
+
+    this.scrollToBottom();
   }
 
+  ngOnDestroy() {
+    this.update$.unsubscribe();
+  }
+
+  sendMessage() {
+    if(!this.currentMessage || !this.currentMessage.trim()) return;
+    this.deepstreamService.ds.emitFromState('message', { message: this.currentMessage }, this.state);
+    this.currentMessage = '';
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      this.scrollArea.nativeElement.scrollTop = this.scrollArea.nativeElement.scrollHeight;
+    });
+  }
 }
