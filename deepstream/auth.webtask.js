@@ -36,9 +36,13 @@ module.exports = function(context, cb) {
 
     // check if the token is an auth token
     if(verifyToken(authData.token)) {
+
+      var decodedToken = jwt.decode(authData.token);
+      var username = decodedToken['http://multinc/username'];
+
       cb(null, {
-        username: generatedId,
-        clientData: { id: generatedId },
+        username: username,
+        clientData: { id: username },
         serverData: { }
       });
       return;
