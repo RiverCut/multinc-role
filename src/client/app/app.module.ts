@@ -6,11 +6,17 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { LobbyPage } from '../pages/lobby/lobby';
+
+import { AuthService } from '../providers/auth.service';
+import { DeepstreamService } from '../providers/deepstream.service';
+import { NotificationService } from '../providers/notification.service';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    LobbyPage
   ],
   imports: [
     BrowserModule,
@@ -19,11 +25,15 @@ import { HomePage } from '../pages/home/home';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    LobbyPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    AuthService,
+    DeepstreamService,
+    NotificationService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

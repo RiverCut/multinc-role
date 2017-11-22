@@ -1,9 +1,7 @@
 
-import { ServerState, SyncTo } from 'rivercut';
+import { ServerState } from 'rivercut';
 
 export class GameState extends ServerState {
-
-  // @SyncTo(Board) public board: Board = new Board();
 
   onInit() {
   }

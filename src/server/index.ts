@@ -1,11 +1,13 @@
 
-import { GameRoom } from './multincgame.room';
 
 require('dotenv').config();
 
 import { Server } from 'rivercut';
 
 import { LobbyRoom } from './lobby.room';
+import { GameRoom } from './multincgame.room';
+
+const { ENV } = require(`../../environments`);
 
 const server = new Server({
   namespace: 'multincrole',
@@ -14,10 +16,10 @@ const server = new Server({
 });
 
 console.log('Initializing...');
-server.init(process.env.DEEPSTREAM_URL, {});
+server.init(ENV.DeepstreamURL, {});
 
 console.log('Registering...');
-server.registerRoom('lobby', LobbyRoom, {});
+server.registerRoom('lobby', LobbyRoom, { singleInstance: true, serializeByRoomId: false });
 server.registerRoom('game', GameRoom, {});
 
 console.log('Logging in...');

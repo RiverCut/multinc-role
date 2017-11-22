@@ -1,9 +1,10 @@
 
 import { ServerState, SyncTo } from 'rivercut';
+import { Lobby } from '../models/Lobby';
 
 export class LobbyState extends ServerState {
 
-  // @SyncTo(Board) public board: Board = new Board();
+  @SyncTo(Lobby) public lobby: Lobby = new Lobby();
 
   onInit() {
   }

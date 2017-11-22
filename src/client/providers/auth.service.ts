@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-// import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
+import { Events } from 'ionic-angular';
 
 @Injectable()
 export class AuthService {
@@ -14,22 +14,29 @@ export class AuthService {
     scope: 'openid'
   });
 
-  // constructor(public router: Router) {}
+  public get token(): string {
+    return localStorage.getItem('id_token');
+  }
+
+  constructor(private events: Events) {}
 
   public login(): void {
     this.auth0.authorize();
   }
 
-  public handleAuthentication(): void {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        window.location.hash = '';
-        this.setSession(authResult);
-        this.goHome();
-      } else if (err) {
-        this.goHome();
-        console.log(err);
-      }
+  public async handleAuthentication(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.auth0.parseHash((err, authResult) => {
+        if (authResult && authResult.accessToken && authResult.idToken) {
+          window.location.hash = '';
+          this.setSession(authResult);
+          resolve(authResult.idToken);
+        } else if (err) {
+          this.goHome();
+          console.log(err);
+          reject(err);
+        }
+      });
     });
   }
 
@@ -57,7 +64,7 @@ export class AuthService {
   }
 
   private goHome() {
-    // TODO navigate to home screen
+    this.events.publish('multinc:unauthenticated');
   }
 
 }
