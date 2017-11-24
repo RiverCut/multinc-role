@@ -1,43 +1,37 @@
 import { Injectable } from '@angular/core';
-import * as auth0 from 'auth0-js';
+import { default as Auth0Lock } from 'auth0-lock';
 import { Events } from 'ionic-angular';
 
 @Injectable()
 export class AuthService {
 
-  auth0 = new auth0.WebAuth({
-    clientID: 'E27Q5Hzsqzv0TkjlydTMgoVIUfQh_T-u',
-    domain: 'multinc-role.auth0.com',
-    responseType: 'token id_token',
-    audience: `https://multinc-role.auth0.com/userinfo`,
-    redirectUri: 'http://localhost:8100/',
-    scope: 'openid'
-  });
+  auth0 = new Auth0Lock(
+    'E27Q5Hzsqzv0TkjlydTMgoVIUfQh_T-u',
+    'multinc-role.auth0.com', {
+      theme: {
+        primaryColor: '#871f78'
+      },
+      auth: {
+        redirect: false
+      }
+    });
 
   public get token(): string {
     return localStorage.getItem('id_token');
   }
 
-  constructor(private events: Events) {}
-
-  public login(): void {
-    this.auth0.authorize();
-  }
-
-  public async handleAuthentication(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.auth0.parseHash((err, authResult) => {
-        if (authResult && authResult.accessToken && authResult.idToken) {
-          window.location.hash = '';
-          this.setSession(authResult);
-          resolve(authResult.idToken);
-        } else if (err) {
-          this.goHome();
-          console.log(err);
-          reject(err);
-        }
+  constructor(private events: Events) {
+    this.auth0.on('authenticated', (result) => {
+      this.setSession({
+        accessToken: result.accessToken,
+        idToken: result.idToken,
+        expiresIn: result.expiresIn
       });
     });
+  }
+
+  public login(): void {
+    this.auth0.show();
   }
 
   private setSession(authResult): void {

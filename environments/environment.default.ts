@@ -1,4 +1,5 @@
 
 export const ENV = {
-  DeepstreamURL: ''
+  DeepstreamURL: '',
+  AutoLogin: false
 };

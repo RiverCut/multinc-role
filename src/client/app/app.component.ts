@@ -34,11 +34,6 @@ export class MyApp {
 
     this.listenForEvents();
 
-    this.authService.handleAuthentication()
-      .then(() => {
-        this.events.publish('multinc:authenticated');
-      });
-
     this.platform.ready().then(() => {
       // this.statusBar.styleDefault();
       // this.splashScreen.hide();
@@ -62,6 +57,7 @@ export class MyApp {
         this.handleDeepstreamAuth();
 
       } catch(e) {
+        console.error(e);
         this.notificationService.alert({
           title: 'Unable to Connect',
           subTitle: 'Please refresh the page and try again'

@@ -1,5 +1,36 @@
 page-lobby {
 
+  .game-area {
+    min-height: calc(100vh - 60px + 4px) !important;
+    max-height: calc(100vh - 60px + 4px) !important;
+    overflow: hidden;
+
+    border: 1px solid #000;
+    border-right: none;
+    display: flex;
+    flex-direction: column;
+
+    .game-list-container {
+      min-height: calc(100vh - 60px - 43px - 56px) !important;
+      max-height: calc(100vh - 60px - 43px - 56px) !important;
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex-wrap: wrap;
+      flex-direction: row;
+    }
+
+    .game-content-area {
+      flex-grow: 1;
+    }
+
+    .adventure-log {
+      height: 200px !important;
+      max-height: 200px !important;
+      overflow-y: auto;
+      border-top: 1px solid #000;
+    }
+  }
+
   .chat-area {
     border: 1px solid #000;
 
@@ -18,6 +49,8 @@ page-lobby {
 
         .timestamp {
           font-size: 80%;
+          min-width: 110px;
+          display: inline-block;
         }
 
         .sender {

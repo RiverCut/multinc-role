@@ -13,7 +13,7 @@
     "ionic:serve": "ionic-app-scripts serve -r",
     "start:client": "npm run ionic:serve",
     "start:dev:client": "cross-env NODE_ENV=dev npm run start:client",
-    "start:server": "nodemon --ignore \"src/client/*\" --exec \"ts-node \" -- --project src/server \"src/server/index.ts\"",
+    "start:server": "nodemon -e ts --ignore \"src/client\" --exec \"ts-node \" -- --project src/server \"src/server/index.ts\"",
     "start:dev:server": "cross-env NODE_ENV=dev npm run start:server",
     "start:deepstream": "deepstream start --config ./ds.config.yml"
   },
@@ -31,11 +31,12 @@
     "@ionic-native/status-bar": "4.4.0",
     "@ionic/storage": "2.1.3",
     "auth0-js": "^8.11.3",
+    "auth0-lock": "^10.24.1",
     "ionic-angular": "3.9.2",
     "ionicons": "3.0.0",
     "lodash": "^4.17.4",
     "pixi.js": "^4.6.1",
-    "rivercut": "^0.1.15",
+    "rivercut": "^0.1.27",
     "rxjs": "5.5.2",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.18"

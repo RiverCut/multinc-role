@@ -6,25 +6,25 @@ import * as _ from 'lodash';
 
 export class LobbyRoom<LobbyState> extends Room {
 
+  async canJoin(userId) {
+    return !_.includes(this.connectedClients, userId);
+  }
+
   onSetup() {
     this.setState(new LobbyState());
   }
 
   onConnect(clientId: string) {
-    this.sendMessage(clientId, { message: 'You joined!' });
-    this.broadcast({ message: `${clientId} joined!`}, [clientId]);
-
     this.state.lobby.users.push(clientId);
   }
 
   onDisconnect(clientId: string) {
-    this.sendMessage(clientId, { message: 'You left!' });
-    this.broadcast({ message: `${clientId} left!`}, [clientId]);
-
     this.state.lobby.users.splice(this.state.lobby.users.indexOf(clientId), 1);
   }
 
   onInit() {
+    this.state.lobby.users = [];
+
     this.on('message', (data) => {
       const { message, $$userId } = data;
 

@@ -16,5 +16,22 @@
 // automatically applied to the <body> element in the app.
 
 .scroll-content {
-  overflow: auto;
+  overflow: hidden;
+}
+
+.blank-slate {
+  width: 100%;
+  height: calc(100vh - 180px);
+  font-size: 200%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+  padding: 20px;
+  flex-direction: column;
+  text-align: center;
+
+  &.small {
+    height: calc(75vh - 180px);
+  }
 }
