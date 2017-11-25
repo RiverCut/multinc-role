@@ -12,11 +12,15 @@ import { AuthService } from '../providers/auth.service';
 import { DeepstreamService } from '../providers/deepstream.service';
 import { NotificationService } from '../providers/notification.service';
 
+import { SpriteComponent } from '../components/sprite.component';
+
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    LobbyPage
+    LobbyPage,
+
+    SpriteComponent
   ],
   imports: [
     BrowserModule,

@@ -30,12 +30,12 @@
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="inGame">
+      <ion-row *ngIf="inGame" class="game-buttons-area">
         <ion-col>
           <button ion-button color="primary" [disabled]="!isLeader" (click)="startGame()" block>Begin Adventure ({{ gameState.players.length }}/4)</button>
         </ion-col>
         <ion-col>
-          <button ion-button color="primary" (click)="quitGame()" block>Quit</button>
+          <button ion-button color="primary" (click)="quitGame()" block>Leave Group</button>
         </ion-col>
       </ion-row>
 
@@ -55,6 +55,23 @@
         <ion-col>
           <div class="blank-slate">
             STARTED
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="inGame" padding class="game-player-area">
+        <ion-col col-3 *ngFor="let player of gameState.players" class="player">
+          <div>
+            <sprite [name]="'PLAYER_'+player.style.toUpperCase()"></sprite>
+          </div>
+          <div>
+            <h6>{{ player.name }} (Lv. {{ player.levels[player.style] }})</h6>
+          </div>
+          <div *ngIf="player.hp !== 0">
+            {{ player.hp }} / {{ player.maxHp }}
+          </div>
+          <div *ngIf="player.hp === 0">
+            DEAD
           </div>
         </ion-col>
       </ion-row>

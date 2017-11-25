@@ -17,29 +17,58 @@ export class DeepstreamService {
   public gameOpts: any;
   public gameState: GameState;
 
-  constructor(private events: Events, private notificationService: NotificationService) {
+  private data$;
+  private disconnect$;
+
+  constructor(
+    private events: Events,
+    private notificationService: NotificationService
+  ) {}
+
+  initClient(): void {
+    if(this.data$) this.data$.unsubscribe();
+    if(this.disconnect$) this.disconnect$.unsubscribe();
+
     this.ds = new Client();
-    this.ds.onData$.subscribe(data => console.log('Received:', data));
+    this.data$ = this.ds.onData$.subscribe(data => console.log('Received:', data));
 
     // no no-rpc-provider, popup saying "no server was available to handle your request, try again later"
-    this.ds.onServerDisconnect$.subscribe(data => {
-      delete this.gameOpts;
-      delete this.gameState;
+    this.disconnect$ = this.ds.onServerDisconnect$.subscribe(async () => {
       this.events.publish('multinc:deauthenticated', { retry: true });
+      try {
+        await this.cleanup();
+      } catch(e) {}
+
     });
   }
 
+
   async login(token): Promise<boolean> {
     try {
-      if(!this.ds.uid) {
+      if(!this.ds || !this.ds.uid) {
+        this.initClient();
         await this.ds.init(ENV.DeepstreamURL);
+        await this.ds.login({ token });
       }
-      await this.ds.login({ token });
+
       await this.joinLobby();
       return true;
     } catch(e) {
       throw e;
     }
+  }
+
+  async cleanup(): Promise<any> {
+    this.lobbyState.uninit();
+    this.gameState.uninit();
+    delete this.lobbyOpts;
+    delete this.lobbyState;
+    delete this.gameOpts;
+    delete this.gameState;
+    // this.disconnect$.unsubscribe();
+    // this.data$.unsubscribe();
+    this.ds.leaveAll();
+    this.ds.close();
   }
 
   private join(room: string, id?: string, opts?: any): Promise<any> {
@@ -77,6 +106,10 @@ export class DeepstreamService {
     await this.ds.leave('Game');
     delete this.gameOpts;
     delete this.gameState;
+  }
+
+  startGame() {
+    this.ds.emitFromState('start-game', {}, this.gameState);
   }
 
 }

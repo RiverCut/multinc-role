@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Events } from 'ionic-angular';
+import { Events, NavParams } from 'ionic-angular';
 
 import { AuthService } from '../../providers/auth.service';
 
@@ -13,16 +13,17 @@ export class HomePage {
 
   constructor(
     public events: Events,
+    public navParams: NavParams,
     public authService: AuthService
   ) {}
 
   ngOnInit() {
-    if(ENV.AutoLogin) this.handleLogin();
+    if(ENV.AutoLogin && !this.navParams.get('ignoreAutoLogin')) this.handleLogin();
   }
 
   handleLogin() {
     if(this.authService.isAuthenticated()) {
-      this.events.publish('multinc:authenticated', this.authService.token);
+      this.events.publish('multinc:authenticated');
     } else {
       this.authService.login();
     }

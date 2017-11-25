@@ -65,7 +65,7 @@ export class LobbyPage {
         newRoomInfo.push(baseRoomInfo);
       });
 
-      this.allRoomInfo = newRoomInfo;
+      this.allRoomInfo = newRoomInfo || [];
     });
   }
 
@@ -101,6 +101,6 @@ export class LobbyPage {
 
   // tell the game server we're ready to roll
   startGame() {
-
+    this.deepstreamService.startGame();
   }
 }

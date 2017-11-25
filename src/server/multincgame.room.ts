@@ -14,6 +14,7 @@ export class GameRoom<GameState> extends Room {
   }
 
   onSetup() {
+    this.setGameLoopInterval(250);
     this.setState(new GameState());
   }
 
@@ -99,8 +100,10 @@ export class GameRoom<GameState> extends Room {
     if(!player.moves) player.moves = ['Attack', 'Attack', 'Attack', 'Attack', 'Attack', 'Attack'];
     if(!player.style) player.style = 'Fighter';
     if(!player.gold)  player.gold = 0;
+    if(!player.levels)player.levels = { Fighter: 1 };
+    if(!player.xp)    player.xp = 0;
 
-    player.hp = this.getHPForStyle(player.style);
+    player.maxHp = player.hp = this.getHPForStyle(player.style);
 
     this.state.game.players.push(player);
 

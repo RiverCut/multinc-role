@@ -10,6 +10,11 @@ page-lobby {
     display: flex;
     flex-direction: column;
 
+    .game-buttons-area {
+      min-height: 70px !important;
+      align-items: center;
+    }
+
     .game-list-container {
       min-height: calc(100vh - 60px - 43px - 56px) !important;
       max-height: calc(100vh - 60px - 43px - 56px) !important;
@@ -21,6 +26,22 @@ page-lobby {
 
     .game-content-area {
       flex-grow: 1;
+    }
+
+    .game-player-area {
+      height: 145px !important;
+      max-height: 145px !important;
+
+      .player {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        h6 {
+          margin-bottom: 0;
+        }
+      }
     }
 
     .adventure-log {

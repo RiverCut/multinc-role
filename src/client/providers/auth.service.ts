@@ -8,6 +8,7 @@ export class AuthService {
   auth0 = new Auth0Lock(
     'E27Q5Hzsqzv0TkjlydTMgoVIUfQh_T-u',
     'multinc-role.auth0.com', {
+      autoclose: true,
       theme: {
         primaryColor: '#871f78'
       },
@@ -27,6 +28,8 @@ export class AuthService {
         idToken: result.idToken,
         expiresIn: result.expiresIn
       });
+
+      this.events.publish('multinc:authenticated');
     });
   }
 
@@ -36,7 +39,7 @@ export class AuthService {
 
   private setSession(authResult): void {
     // Set the time that the access token will expire at
-    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + Date.now());
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
@@ -54,7 +57,7 @@ export class AuthService {
 
   public isAuthenticated(): boolean {
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return new Date().getTime() < expiresAt;
+    return Date.now() < expiresAt;
   }
 
   private goHome() {

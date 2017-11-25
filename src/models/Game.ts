@@ -8,7 +8,10 @@ export class Player extends Model {
   public moves: string[];
   public gold: number;
   public name: string;
+  public maxHp: number;
   public hp: number;
+  public xp: number;
+  public levels: { [key: string]: number };
 }
 
 export class Game extends Model {

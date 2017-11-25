@@ -58,6 +58,7 @@ export class MyApp {
 
       } catch(e) {
         console.error(e);
+        this.authService.logout();
         this.notificationService.alert({
           title: 'Unable to Connect',
           subTitle: 'Please refresh the page and try again'
@@ -66,17 +67,13 @@ export class MyApp {
     });
 
     this.events.subscribe('multinc:deauthenticated', async (opts) => {
-      this.nav.setRoot(HomePage);
-
-      try {
-        await this.deepstreamService.ds.leaveAll();
-      } catch(e) {}
+      this.nav.setRoot(HomePage, { ignoreAutoLogin: true });
 
       if(opts.retry) {
-        this.reconnect$ = Observable.timer(0, 3000)
+        this.reconnect$ = Observable.timer(3000, 3000)
           .subscribe(async () => {
             try {
-              await this.deepstreamService.joinLobby();
+              await this.deepstreamService.login(this.authService.token);
               this.reconnect$.unsubscribe();
               this.handleDeepstreamAuth();
             } catch(e) {}
