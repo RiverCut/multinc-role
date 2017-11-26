@@ -58,7 +58,9 @@ export class MyApp {
 
       } catch(e) {
         console.error(e);
-        this.authService.logout();
+        if(!this.authService.isAuthenticated()) {
+          this.authService.logout();
+        }
         this.notificationService.alert({
           title: 'Unable to Connect',
           subTitle: 'Please refresh the page and try again'

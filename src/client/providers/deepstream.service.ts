@@ -3,9 +3,11 @@ import { Injectable } from '@angular/core';
 import { Client } from 'rivercut';
 import { ENV } from '../../../environments/environment.default';
 import { Events } from 'ionic-angular';
-import { NotificationService } from "./notification.service";
+// import { NotificationService } from "./notification.service";
 import { LobbyState } from './lobby.clientstate';
 import { GameState } from './game.clientstate';
+
+// TODO the state flickering is still broken
 
 @Injectable()
 export class DeepstreamService {
@@ -22,7 +24,7 @@ export class DeepstreamService {
 
   constructor(
     private events: Events,
-    private notificationService: NotificationService
+    // private notificationService: NotificationService
   ) {}
 
   initClient(): void {
@@ -30,7 +32,11 @@ export class DeepstreamService {
     if(this.disconnect$) this.disconnect$.unsubscribe();
 
     this.ds = new Client();
-    this.data$ = this.ds.onData$.subscribe(data => console.log('Received:', data));
+    this.data$ = this.ds.onMessage$.subscribe(data => {
+      if(data === 'leave-game') return this.leaveGame();
+
+      console.log('Received Data:', data);
+    });
 
     // no no-rpc-provider, popup saying "no server was available to handle your request, try again later"
     this.disconnect$ = this.ds.onServerDisconnect$.subscribe(async () => {
@@ -42,6 +48,14 @@ export class DeepstreamService {
     });
   }
 
+  private async leaveGame() {
+    try {
+      await this.ds.leave('Game');
+    } catch(e) {}
+
+    delete this.gameOpts;
+    delete this.gameState;
+  }
 
   async login(token): Promise<boolean> {
     try {
@@ -71,15 +85,8 @@ export class DeepstreamService {
     this.ds.close();
   }
 
-  private join(room: string, id?: string, opts?: any): Promise<any> {
-    try {
-      return this.ds.join(room, id, opts);
-    } catch(e) {
-      this.notificationService.alert({
-        title: 'No Servers Available',
-        subTitle: 'There were no servers able to handle your request. Please try again, and if the problem persists, refresh the page.'
-      });
-    }
+  private async join(room: string, id?: string, opts?: any): Promise<any> {
+    return await this.ds.join(room, id, opts);
   }
 
   async joinLobby(): Promise<any> {
@@ -110,6 +117,10 @@ export class DeepstreamService {
 
   startGame() {
     this.ds.emitFromState('start-game', {}, this.gameState);
+  }
+
+  target(id: string) {
+    this.ds.emitFromState('select-target', { id }, this.gameState);
   }
 
 }

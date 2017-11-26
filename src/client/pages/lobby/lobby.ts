@@ -103,4 +103,8 @@ export class LobbyPage {
   startGame() {
     this.deepstreamService.startGame();
   }
+
+  target(id: string) {
+    this.deepstreamService.target(id);
+  }
 }

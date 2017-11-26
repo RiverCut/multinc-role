@@ -16,7 +16,7 @@
         <ion-col no-padding>
           <ion-toolbar color="tertiary">
             <ion-title *ngIf="!inGame">Play - {{ allRoomInfo.length }} Games Open</ion-title>
-            <ion-title *ngIf="inGame">Playing Game - {{ gameState.leader }}'s Game</ion-title>
+            <ion-title *ngIf="inGame">Playing Game - {{ gameState.leader }}'s Game (Floor {{ gameState ? gameState.currentStep + 1 :  1}})</ion-title>
           </ion-toolbar>
         </ion-col>
       </ion-row>
@@ -30,7 +30,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="inGame" class="game-buttons-area">
+      <ion-row *ngIf="inGame && !gameState.adventureStarted" class="game-buttons-area">
         <ion-col>
           <button ion-button color="primary" [disabled]="!isLeader" (click)="startGame()" block>Begin Adventure ({{ gameState.players.length }}/4)</button>
         </ion-col>
@@ -51,28 +51,66 @@
         </ion-col>
       </ion-row>
 
+      <ion-row *ngIf="inGame && gameState.adventureStarted" padding class="game-player-area">
+        <ion-col col-3 *ngFor="let monster of gameState.currentMonsters" class="player" (click)="target(monster.id)">
+          <div class="sprite-container">
+            <span class="adds" *ngIf="monster.attack || monster.defense">
+              +{{ monster.attack }}A / +{{ monster.defense }}D
+            </span>
+            <sprite [name]="'ENEMY_'+monster.spriteKey"></sprite>
+          </div>
+          <div>
+            <h6>{{ monster.name }} (Lv. {{ monster.level }})</h6>
+          </div>
+          <div *ngIf="monster.hp > 0">
+            {{ monster.hp }} / {{ monster.maxHp }}
+          </div>
+          <div *ngIf="monster.hp <= 0">
+            DEAD
+          </div>
+        </ion-col>
+      </ion-row>
+
       <ion-row *ngIf="inGame && gameState.adventureStarted" padding class="game-content-area">
         <ion-col>
-          <div class="blank-slate">
-            STARTED
+          <div class="blank-slate smaller">
+            {{ gameState.status }}
           </div>
         </ion-col>
       </ion-row>
 
       <ion-row *ngIf="inGame" padding class="game-player-area">
-        <ion-col col-3 *ngFor="let player of gameState.players" class="player">
-          <div>
-            <sprite [name]="'PLAYER_'+player.style.toUpperCase()"></sprite>
+        <ion-col col-3 *ngFor="let player of gameState.players" class="player" (click)="target(player.id)">
+          <div class="sprite-container-container">
+
+            <div class="sprite-container">
+              <span class="adds" *ngIf="player.attack || player.defense">
+                +{{ player.attack }}A/{{ player.defense }}D
+              </span>
+              <sprite [name]="'PLAYER_'+player.style.toUpperCase()"></sprite>
+            </div>
+
+            <div class="sprite-container">
+              <span class="check" *ngIf="gameState.playerTargets[player.name]">
+                <ion-icon name="checkmark"></ion-icon>
+              </span>
+              <action-sprite [name]="gameState.playerActions[player.name]"></action-sprite>
+            </div>
+
           </div>
+
           <div>
             <h6>{{ player.name }} (Lv. {{ player.levels[player.style] }})</h6>
           </div>
-          <div *ngIf="player.hp !== 0">
+
+          <div *ngIf="player.hp > 0">
             {{ player.hp }} / {{ player.maxHp }}
           </div>
-          <div *ngIf="player.hp === 0">
+
+          <div *ngIf="player.hp <= 0">
             DEAD
           </div>
+
         </ion-col>
       </ion-row>
 

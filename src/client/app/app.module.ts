@@ -13,6 +13,7 @@ import { DeepstreamService } from '../providers/deepstream.service';
 import { NotificationService } from '../providers/notification.service';
 
 import { SpriteComponent } from '../components/sprite.component';
+import { ActionSpriteComponent } from '../components/action.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { SpriteComponent } from '../components/sprite.component';
     HomePage,
     LobbyPage,
 
-    SpriteComponent
+    SpriteComponent,
+    ActionSpriteComponent
   ],
   imports: [
     BrowserModule,

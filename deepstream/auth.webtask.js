@@ -26,7 +26,7 @@ module.exports = function(context, cb) {
     // check if the token is a server token
     if(authData.token === serverToken) {
       cb(null, {
-        username: generatedId,
+        username: 'server-' + generatedId,
         clientData: { id: generatedId },
         serverData: { hasAuthority: true }
       });

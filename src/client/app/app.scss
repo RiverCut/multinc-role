@@ -34,4 +34,8 @@
   &.small {
     height: calc(75vh - 180px);
   }
+
+  &.smaller {
+    height: calc(50vh - 180px);
+  }
 }

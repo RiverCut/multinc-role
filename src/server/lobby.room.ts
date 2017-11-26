@@ -16,6 +16,7 @@ export class LobbyRoom<LobbyState> extends Room {
 
   onConnect(clientId: string) {
     this.state.lobby.users.push(clientId);
+    this.ds.record.getRecord(`players/${clientId}`).set('alreadyInGame', false);
   }
 
   onDisconnect(clientId: string) {
@@ -46,6 +47,5 @@ export class LobbyRoom<LobbyState> extends Room {
   }
 
   onDispose() {}
-  onMessage() {}
   onTick() {}
 }

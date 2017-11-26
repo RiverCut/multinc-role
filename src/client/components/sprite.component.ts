@@ -136,7 +136,7 @@ const SpriteMap = {
 
 @Component({
   selector: 'sprite',
-  template: `<img src="assets/sprites.gif" class="sprite" [style.object-position]="spritePosition "/>`,
+  template: `<img src="assets/sprites.gif" class="sprite" [style.object-position]="spritePosition" />`,
   styles: [`
     .sprite {
       object-fit: none;
