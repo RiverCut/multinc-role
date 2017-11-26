@@ -3,8 +3,14 @@ import { Component, Input } from '@angular/core';
 
 const SpriteMap = {
   Attack: 'http://seiyria.com/gameicons-font/svg/broadsword.svg',
-  Defend: 'http://seiyria.com/gameicons-font/svg/shield.svg',
-  AttackAll: 'http://seiyria.com/gameicons-font/svg/sword-spin.svg'
+  Defend: 'http://seiyria.com/gameicons-font/svg/round-shield.svg',
+  GreaterDefend: 'http://seiyria.com/gameicons-font/svg/shield.svg',
+  AttackAll: 'http://seiyria.com/gameicons-font/svg/sword-spin.svg',
+  ShieldBash: 'http://seiyria.com/gameicons-font/svg/shield-bounces.svg',
+  FireBeam: 'http://seiyria.com/gameicons-font/svg/fire-ray.svg',
+  FireWave: 'http://seiyria.com/gameicons-font/svg/fire-wave.svg',
+  Heal: 'http://seiyria.com/gameicons-font/svg/heart-plus.svg',
+  StrongPunch: 'http://seiyria.com/gameicons-font/svg/fist-2.svg'
 };
 
 @Component({

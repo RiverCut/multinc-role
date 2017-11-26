@@ -33,7 +33,7 @@ export const EnemyCodex = {
     gold: 1,
     level: 1,
     xp: 3,
-    moves: ['Attack', 'Attack', 'Attack', 'Defend', 'Defend', 'Defend']
+    moves: ['Attack', 'Attack', 'ShieldBash', 'ShieldBash', 'Defend', 'GreaterDefend']
   },
   CASTGOBLIN: {
     name: 'Caster Goblin',
@@ -41,7 +41,7 @@ export const EnemyCodex = {
     gold: 1,
     level: 1,
     xp: 2,
-    moves: ['Attack', 'Attack', 'Attack', 'Attack', 'Attack', 'Defend']
+    moves: ['Attack', 'FireBeam', 'FireBeam', 'FireBeam', 'FireWave', 'Defend']
   },
   STINKGOBLIN: {
     name: 'Stink Goblin',
@@ -49,7 +49,7 @@ export const EnemyCodex = {
     gold: 1,
     level: 1,
     xp: 4,
-    moves: ['Attack', 'Attack', 'Attack', 'Attack', 'Attack', 'Defend']
+    moves: ['Attack', 'Attack', 'Defend', 'DoNothing', 'DoNothing', 'Defend']
   },
   GOBLINSHAMAN: {
     name: 'Goblin Shaman',
@@ -57,7 +57,7 @@ export const EnemyCodex = {
     gold: 1,
     level: 2,
     xp: 2,
-    moves: ['Attack', 'Attack', 'Attack', 'Attack', 'Attack', 'Defend']
+    moves: ['Attack', 'Attack', 'Heal', 'Heal', 'Heal', 'Defend']
   },
   GOBLINBRUISER: {
     name: 'Goblin Bruiser',
@@ -65,6 +65,6 @@ export const EnemyCodex = {
     gold: 1,
     level: 3,
     xp: 5,
-    moves: ['AttackAll', 'AttackAll', 'AttackAll', 'Attack', 'Attack', 'Attack']
+    moves: ['AttackAll', 'AttackAll', 'AttackAll', 'StrongPunch', 'StrongPunch', 'Attack']
   }
 };

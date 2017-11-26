@@ -326,9 +326,13 @@ export class GameRoom<GameState> extends Room {
   playerTurn() {
     const gameState = this.state.game;
     _.each(gameState.players, player => {
-      this.reset(player);
+      const actionName = gameState.playerActions[player.name];
+      if(actionName !== 'DoNothing') {
+        this.reset(player);
+      }
       if(!player.isAlive()) return;
-      const action = SkillsCodex[gameState.playerActions[player.name]];
+
+      const action = SkillsCodex[actionName];
 
       const targets = gameState.playerTargets[player.name];
       if(!targets || targets.length === 0) {
@@ -349,9 +353,12 @@ export class GameRoom<GameState> extends Room {
   enemyTurn() {
     const gameState = this.state.game;
     _.each(gameState.currentMonsters, monster => {
-      this.reset(monster);
+      const actionName = _.sample(EnemyCodex[monster.spriteKey].moves);
+      if(actionName !== 'DoNothing') {
+        this.reset(monster);
+      }
       if(!monster.isAlive()) return;
-      const action = SkillsCodex[_.sample(EnemyCodex[monster.spriteKey].moves)];
+      const action = SkillsCodex[actionName];
       const targets = this.getTargets(action.preference, gameState, 'enemy');
       if(!targets || targets.length === 0) {
         this.updateLog(`${monster.name}'s turn was skipped due to a dead target!`);
