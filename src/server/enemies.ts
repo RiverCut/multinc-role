@@ -57,7 +57,7 @@ export const EnemyCodex = {
     gold: 1,
     level: 2,
     xp: 2,
-    moves: ['Attack', 'Attack', 'Heal', 'Heal', 'Heal', 'Defend']
+    moves: ['Attack', 'Attack', 'Reinforce', 'Heal', 'Heal', 'Defend']
   },
   GOBLINBRUISER: {
     name: 'Goblin Bruiser',

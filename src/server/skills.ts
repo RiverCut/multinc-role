@@ -7,7 +7,7 @@ export const SkillsCodex = {
     preference: 'enemy-alive',
     automatic: (caster, possibleTargets) => _.sample(possibleTargets).id,
     effect: (caster, target) => {
-      const damage = (caster.level * 2) - target.defense;
+      const damage = (caster.level * 2) - target.defense + caster.attack;
       target.hp -= damage;
       return { damage };
     },
@@ -41,12 +41,11 @@ export const SkillsCodex = {
     },
     message: (caster) => `${caster.name} defended!`
   },
-
   AttackAll: {
     preference: 'enemy-alive-party',
     automatic: (caster, possibleTargets) => _.map(possibleTargets || [], 'id'),
     effect: (caster, target) => {
-      const damage = (caster.level * 1) - target.defense;
+      const damage = (caster.level * 1) - target.defense + caster.attack;
       target.hp -= damage;
       return { damage };
     },
@@ -57,7 +56,7 @@ export const SkillsCodex = {
     automatic: (caster, possibleTargets) =>  _.sample(possibleTargets).id,
     effect: (caster, target) => {
       caster.defense += 1 * caster.level;
-      const damage = (caster.level * 1) - target.defense;
+      const damage = (caster.level * 1) - target.defense + caster.attack;
       target.hp -= damage;
       return { damage };
     },
@@ -67,7 +66,7 @@ export const SkillsCodex = {
     preference: 'enemy-alive',
     automatic: (caster, possibleTargets) =>  _.sample(possibleTargets).id,
     effect: (caster, target) => {
-      const damage = (caster.level * 2);
+      const damage = (caster.level * 2) + caster.attack;
       target.hp -= damage;
       return { damage };
     },
@@ -77,7 +76,7 @@ export const SkillsCodex = {
     preference: 'enemy-alive-party',
     automatic: (caster, possibleTargets) => _.map(possibleTargets || [], 'id'),
     effect: (caster, target) => {
-      const damage = (caster.level * 1);
+      const damage = (caster.level * 1) + caster.attack;
       target.hp -= damage;
       return { damage };
     },
@@ -97,10 +96,20 @@ export const SkillsCodex = {
     preference: 'enemy-alive',
     automatic: (caster, possibleTargets) => _.sample(possibleTargets).id,
     effect: (caster, target) => {
-      const damage = (caster.level * 3) - target.defense;
+      const damage = (caster.level * 3) - target.defense + caster.attack;
       target.hp -= damage;
       return { damage };
     },
     message: (caster, target, { damage }) => `${caster.name} punched ${target.name} for ${damage} damage!`
+  },
+  Reinforce: {
+    preference: 'ally-alive',
+    automatic: (caster, possibleTargets) => _.sample(possibleTargets).id,
+    effect: (caster, target) => {
+      target.attack += 1;
+      target.defense += 1;
+      return { };
+    },
+    message: (caster, target, { damage }) => `${caster.name} reinforced ${target.name}'s attack and defense!`
   }
 };

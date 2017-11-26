@@ -10,7 +10,8 @@ const SpriteMap = {
   FireBeam: 'http://seiyria.com/gameicons-font/svg/fire-ray.svg',
   FireWave: 'http://seiyria.com/gameicons-font/svg/fire-wave.svg',
   Heal: 'http://seiyria.com/gameicons-font/svg/heart-plus.svg',
-  StrongPunch: 'http://seiyria.com/gameicons-font/svg/fist-2.svg'
+  StrongPunch: 'http://seiyria.com/gameicons-font/svg/fist-2.svg',
+  Reinforce: 'http://seiyria.com/gameicons-font/svg/fireflake.svg'
 };
 
 @Component({

@@ -326,12 +326,14 @@ export class GameRoom<GameState> extends Room {
   playerTurn() {
     const gameState = this.state.game;
     _.each(gameState.players, player => {
-      const actionName = gameState.playerActions[player.name];
-      if(actionName !== 'DoNothing') {
+      if(!player.isAlive()) {
         this.reset(player);
+        return;
       }
-      if(!player.isAlive()) return;
 
+      let { attack, defense } = player;
+
+      const actionName = gameState.playerActions[player.name];
       const action = SkillsCodex[actionName];
 
       const targets = gameState.playerTargets[player.name];
@@ -347,17 +349,24 @@ export class GameRoom<GameState> extends Room {
         const opts = action.effect(player, target);
         this.updateLog(action.message(player, target, opts || {}));
       });
+
+      if(actionName !== 'DoNothing') {
+        player.attack -= attack;
+        player.defense -= defense;
+      }
     });
   }
 
   enemyTurn() {
     const gameState = this.state.game;
     _.each(gameState.currentMonsters, monster => {
-      const actionName = _.sample(EnemyCodex[monster.spriteKey].moves);
-      if(actionName !== 'DoNothing') {
+      if(!monster.isAlive()) {
         this.reset(monster);
+        return;
       }
-      if(!monster.isAlive()) return;
+
+      let { attack, defense } = monster;
+      const actionName = _.sample(EnemyCodex[monster.spriteKey].moves);
       const action = SkillsCodex[actionName];
       const targets = this.getTargets(action.preference, gameState, 'enemy');
       if(!targets || targets.length === 0) {
@@ -373,6 +382,11 @@ export class GameRoom<GameState> extends Room {
         const opts = action.effect(monster, target);
         this.updateLog(action.message(monster, target, opts || {}));
       });
+
+      if(actionName !== 'DoNothing') {
+        monster.attack -= attack;
+        monster.defense -= defense;
+      }
     });
   }
 
