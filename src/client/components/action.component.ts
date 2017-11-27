@@ -4,6 +4,7 @@ import { Component, Input } from '@angular/core';
 const SpriteMap = {
   Attack: 'http://seiyria.com/gameicons-font/svg/broadsword.svg',
   Defend: 'http://seiyria.com/gameicons-font/svg/round-shield.svg',
+  DoNothing: 'http://seiyria.com/gameicons-font/svg/knockout.svg',
   GreaterDefend: 'http://seiyria.com/gameicons-font/svg/shield.svg',
   AttackAll: 'http://seiyria.com/gameicons-font/svg/sword-spin.svg',
   ShieldBash: 'http://seiyria.com/gameicons-font/svg/shield-bounces.svg',

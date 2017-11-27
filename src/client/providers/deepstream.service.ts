@@ -7,8 +7,6 @@ import { Events } from 'ionic-angular';
 import { LobbyState } from './lobby.clientstate';
 import { GameState } from './game.clientstate';
 
-// TODO the state flickering is still broken
-
 @Injectable()
 export class DeepstreamService {
 
@@ -92,9 +90,7 @@ export class DeepstreamService {
   async joinLobby(): Promise<any> {
     const lobbyOpts = await this.join('Lobby');
     this.lobbyOpts = lobbyOpts;
-    if(!this.lobbyState) {
-      this.lobbyState = this.ds.createState<LobbyState>(LobbyState, this.lobbyOpts);
-     }
+    this.lobbyState = this.ds.createState<LobbyState>(LobbyState, this.lobbyOpts);
     return lobbyOpts;
   }
 
@@ -121,6 +117,26 @@ export class DeepstreamService {
 
   target(id: string) {
     this.ds.emitFromState('select-target', { id }, this.gameState);
+  }
+
+  async getStats() {
+    return this.ds.emitFromState('get-stats', {}, this.lobbyState);
+  }
+
+  async getBuyData() {
+    return this.ds.emitFromState('get-buy-data', {}, this.lobbyState);
+  }
+
+  async changeStyle(style: string) {
+    return this.ds.emitFromState('change:style', { style }, this.lobbyState);
+  }
+
+  async levelUp() {
+    return this.ds.emitFromState('change:levelup', {}, this.lobbyState);
+  }
+
+  async buySkill(skill: string, index: number) {
+    return this.ds.emitFromState('change:skill', { skill, index }, this.lobbyState);
   }
 
 }

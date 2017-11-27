@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { Select } from 'ionic-angular';
 import { DeepstreamService } from '../../providers/deepstream.service';
 
 import * as _ from 'lodash';
@@ -10,6 +11,7 @@ import * as _ from 'lodash';
 export class LobbyPage {
 
   @ViewChild('scrollArea') private scrollArea;
+  @ViewChild('styles') private styles: Select;
 
   public currentMessage: string;
 
@@ -17,6 +19,17 @@ export class LobbyPage {
   private roomUpdate$;
 
   public allRoomInfo: any[] = [];
+  public player;
+  public buyData;
+  public selectedMove: number;
+
+  public get levelupXP() {
+    return this.player.levels[this.player.style] * 100;
+  }
+
+  public get filteredSkills() {
+    return _.filter(this.buyData.skills, sk => sk.style === this.player.style || !sk.style);
+  }
 
   get username() {
     return this.deepstreamService.ds.uid;
@@ -106,5 +119,33 @@ export class LobbyPage {
 
   target(id: string) {
     this.deepstreamService.target(id);
+  }
+
+  hidePlayer() {
+    this.player = null;
+  }
+
+  async loadCharacter() {
+    const player = await this.deepstreamService.getStats();
+    const buyData = await this.deepstreamService.getBuyData();
+    this.player = player;
+    this.buyData = buyData;
+  }
+
+  async _changeStyle($event) {
+    const newPlayer = await this.deepstreamService.changeStyle($event);
+    this.player = newPlayer;
+  }
+
+  changeStyle() {
+    this.styles.open();
+  }
+
+  async levelUp() {
+    this.player = await this.deepstreamService.levelUp();
+  }
+
+  async buySkill(skill: string) {
+    this.player = await this.deepstreamService.buySkill(skill, this.selectedMove);
   }
 }

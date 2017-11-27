@@ -15,18 +15,103 @@
       <ion-row no-padding class="chat-header">
         <ion-col no-padding>
           <ion-toolbar color="tertiary">
-            <ion-title *ngIf="!inGame">Play - {{ allRoomInfo.length }} Games Open</ion-title>
-            <ion-title *ngIf="inGame">Playing Game - {{ gameState.leader }}'s Game (Floor {{ gameState ? gameState.currentStep + 1 :  1}})</ion-title>
+
+            <ion-buttons left *ngIf="player">
+              <button ion-button icon-only (click)="hidePlayer()">
+                <ion-icon name="arrow-round-back"></ion-icon>
+              </button>
+            </ion-buttons>
+
+            <ion-title *ngIf="!inGame && !player">Play - {{ allRoomInfo.length }} Games Open</ion-title>
+            <ion-title *ngIf="inGame && !player">Playing Game - {{ gameState.leader }}'s Game (Floor {{ gameState ? gameState.currentStep + 1 :  1}})</ion-title>
+            <ion-title *ngIf="player">My Character</ion-title>
+
+            <ion-buttons right *ngIf="player">
+              <button ion-button (click)="changeStyle()">
+                Change Style
+              </button>
+            </ion-buttons>
+
           </ion-toolbar>
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="!inGame">
+      <ion-row *ngIf="player">
+
+        <ion-item class="hidden">
+          <ion-label>Style Selection</ion-label>
+          <ion-select #styles (ionChange)="_changeStyle($event)">
+            <ion-option *ngFor="let style of buyData.styles" [value]="style.name" [disabled]="player.levels[style.name] ? false : style.cost > player.gold">
+              {{ style.name }}
+              <span *ngIf="player.levels[style.name]">Lv. {{ player.levels[style.name] }}</span>
+              <span *ngIf="!player.levels[style.name]">({{ style.cost | number }} gold)</span>
+            </ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-col padding>
+          <ion-row>
+            <ion-col class="vertical-center">
+              <ion-col style="max-width: 58px">
+                <sprite [name]="'PLAYER_'+player.style.toUpperCase()"></sprite>
+              </ion-col>
+              <ion-col>
+                <span class="padl">{{ player.style }} Lv. {{ player.levels[player.style] || 1 }} - {{ player.maxHp }} HP</span>
+                <button ion-button small [disabled]="levelupXP > player.xp" (click)="levelUp()">Level Up ({{ levelupXP | number }} XP)</button>
+              </ion-col>
+            </ion-col>
+            <ion-col col-3 class="vertical-center">
+              <img src="http://seiyria.com/gameicons-font/svg/coins.svg" width="48" height="48" /> <span class="padl">{{ player.gold | number }} gold</span>
+            </ion-col>
+            <ion-col col-3 class="vertical-center">
+              <img src="http://seiyria.com/gameicons-font/svg/abstract-010.svg" width="48" height="48" /> <span class="padl">{{ player.xp | number }} xp</span>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col col-2 no-padding
+                     *ngFor="let move of player.moves; let i = index"
+                     class="move-col"
+                     [class.changeable]="i > 0"
+                     [class.active]="selectedMove === i">
+              <div (click)="i > 0 && selectedMove = i">
+                <action-sprite [name]="move"></action-sprite>
+              </div>
+              <div>
+                {{ move }}
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-list class="move-list">
+                <ion-item text-wrap *ngFor="let skillData of filteredSkills" class="skill-button">
+
+                    <ion-avatar item-start>
+                      <action-sprite [name]="skillData.name"></action-sprite>
+                    </ion-avatar>
+
+                    <h2>{{ skillData.name }}</h2>
+                    <h3>Required Level: {{ skillData.level }}</h3>
+                    <p>{{ skillData.desc }}</p>
+
+                    <button outline item-end ion-button color="primary"
+                            [disabled]="!selectedMove || skillData.level > player.levels[player.style] || skillData.cost > player.gold"
+                            (click)="buySkill(skillData.name)">Buy for {{skillData.cost | number }} gold</button>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="!inGame && !player">
         <ion-col>
           <button ion-button color="primary" (click)="joinGame(null, true)" block>Start New Game</button>
         </ion-col>
         <ion-col>
-          <button ion-button color="primary" disabled block>My Profile</button>
+          <button ion-button color="primary" (click)="loadCharacter()" block>My Character</button>
         </ion-col>
       </ion-row>
 
@@ -38,7 +123,6 @@
           <button ion-button color="primary" (click)="quitGame()" block>Leave Group</button>
         </ion-col>
       </ion-row>
-
 
       <ion-row *ngIf="inGame && !gameState.adventureStarted" padding class="game-content-area">
         <ion-col>
@@ -122,13 +206,13 @@
         </ion-col>
       </ion-row>
 
-      <ion-row no-padding *ngIf="!inGame && !hasRoomInfo">
+      <ion-row no-padding *ngIf="!inGame && !hasRoomInfo && !player">
         <div class="blank-slate">
           No games have been started yet. <button ion-button color="primary" (click)="joinGame(null, true)">Start one!</button>
         </div>
       </ion-row>
 
-      <ion-row no-padding *ngIf="!inGame && hasRoomInfo" class="game-list-container">
+      <ion-row no-padding *ngIf="!inGame && hasRoomInfo && !player" class="game-list-container">
         <ion-col col-6 *ngFor="let info of allRoomInfo">
           <ion-card>
             <ion-card-header>

@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { Combatant, Game, Monster, Player } from '../models/Game';
 import { EnemyCodex, RegionCodex } from './enemies';
 import { SkillsCodex } from './skills';
+import { InitializePlayer } from './initializer';
 
 // TODO test with forks
 
@@ -20,7 +21,7 @@ export class GameRoom<GameState> extends Room {
   }
 
   onSetup() {
-    const intervalMod = process.env.NODE_ENV === 'dev' ? 10 : 1;
+    const intervalMod = process.env.NODE_ENV === 'dev' ? 1 : 1;
     this.setGameLoopInterval(250 / intervalMod);
     this.setState(new GameState());
   }
@@ -134,22 +135,6 @@ export class GameRoom<GameState> extends Room {
     if(this.state.game.adventureLog.length > 15) this.state.game.adventureLog.length = 15;
   }
 
-  getHPForStyle(style, level = 1) {
-    const styles = {
-      Fighter: 150,
-      Mage: 50,
-      Thief: 100
-    };
-
-    const mults = {
-      Fighter: 5,
-      Mage: 3,
-      Thief: 4
-    };
-
-    return (styles[style] || 100) + ((mults[style] || 0) * (level - 1));
-  }
-
   savePlayer(player: Player): void {
     this.players[player.name].set(player);
   }
@@ -161,15 +146,7 @@ export class GameRoom<GameState> extends Room {
   }
 
   initPlayer(player: Player): Player {
-    if(!player.moves)       player.moves = ['Attack', 'Attack', 'Attack', 'Attack', 'Attack', 'Attack'];
-    if(!player.style)       player.style = 'Fighter';
-    if(!player.gold)        player.gold = 0;
-    if(!player.levels)      player.levels = { Fighter: 1 };
-    if(!player.xp)          player.xp = 0;
-    if(!player.styleMoves)  player.styleMoves = { Fighter: ['Attack', 'Attack', 'Attack', 'Attack', 'Attack', 'Attack'] };
-
-    player.maxHp = player.hp = this.getHPForStyle(player.style, player.level);
-    player.attack = player.defense = 0;
+    InitializePlayer(player);
 
     this.state.game.players.push(player);
 

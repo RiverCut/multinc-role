@@ -10,6 +10,8 @@ import { NotificationService } from '../providers/notification.service';
 import { LobbyPage } from '../pages/lobby/lobby';
 import { Observable } from 'rxjs/Observable';
 
+import * as _ from 'lodash';
+
 import 'rxjs/add/observable/timer';
 
 @Component({
@@ -58,7 +60,7 @@ export class MyApp {
 
       } catch(e) {
         console.error(e);
-        if(!this.authService.isAuthenticated()) {
+        if(!this.authService.isAuthenticated() || _.includes(e.message, 'Could not authenticate')) {
           this.authService.logout();
         }
         this.notificationService.alert({

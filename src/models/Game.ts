@@ -25,7 +25,7 @@ export class Monster extends Combatant {
   public level: number;
 }
 
-export type Style = 'Mage' | 'Fighter' | 'Thief';
+export type Style = 'Mage' | 'Fighter' | 'Druid';
 
 export class Player extends Combatant {
   public style: Style;
