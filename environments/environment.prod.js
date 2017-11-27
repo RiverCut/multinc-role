@@ -1,5 +1,5 @@
 
 export const ENV = {
-  DeepstreamURL: 'ws://127.0.0.1:6020/deepstream',
+  DeepstreamURL: 'ws://multincrole-deepstream.raymond-h.me',
   AutoLogin: false
 };
