@@ -39,3 +39,4 @@ www
 build
 dist
 *.yml
+deepstream/dssetup

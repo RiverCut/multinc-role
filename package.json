@@ -15,7 +15,8 @@
     "start:dev:client": "cross-env NODE_ENV=dev npm run start:client",
     "start:server": "nodemon -e ts --ignore \"src/client\" --exec \"ts-node \" -- --project src/server \"src/server/index.ts\"",
     "start:dev:server": "cross-env NODE_ENV=dev npm run start:server",
-    "start:deepstream": "deepstream start --config ./ds.config.yml"
+    "start:prod:server": "cross-env NODE_ENV=production npm run start:server",
+    "start:deepstream": "deepstream start --config ./deepstream/ds.config.yml"
   },
   "dependencies": {
     "@angular/common": "5.0.1",
