@@ -83,7 +83,7 @@ export class LobbyPage {
       this.allRoomInfo = newRoomInfo || [];
     });
 
-    this.autoCheck$ = Observable.timer(0, _.random(1000, 3000))
+    this.autoCheck$ = Observable.timer(0, _.random(4500, 6000))
       .subscribe(() => {
 
         // no auto while in menu
