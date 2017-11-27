@@ -26,7 +26,7 @@ export class LobbyPage {
   public selectedMove: number;
 
   public get levelupXP() {
-    return this.player.levels[this.player.style] * 100;
+    return this.player.levels[this.player.style] * 500;
   }
 
   public get filteredSkills() {

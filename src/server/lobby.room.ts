@@ -89,7 +89,7 @@ export class LobbyRoom<LobbyState> extends Room {
       response.ack();
       const player = await this.loadPlayer(data.$$userId);
 
-      const cost = player.level * 100;
+      const cost = player.level * 500;
 
       if(player.xp < cost) return player;
 
