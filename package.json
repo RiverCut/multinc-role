@@ -15,7 +15,7 @@
     "start:dev:client": "cross-env NODE_ENV=dev npm run start:client",
     "start:server": "nodemon -e ts --ignore \"src/client\" --exec \"ts-node \" -- --project src/server \"src/server/index.ts\"",
     "start:dev:server": "cross-env NODE_ENV=dev npm run start:server",
-    "start:prod:server": "cross-env NODE_ENV=production npm run start:server",
+    "start:prod:server": "NODE_ENV=production npm run start:server",
     "start:deepstream": "deepstream start --config ./deepstream/ds.config.yml"
   },
   "dependencies": {
@@ -53,7 +53,7 @@
     "nodemon": "^1.12.1",
     "npm-run-all": "^4.1.2",
     "ts-node": "^3.3.0",
-    "typescript": "2.4.2",
+    "typescript": "^2.4.2",
     "webpack-merge": "^4.1.1"
   },
   "config": {
