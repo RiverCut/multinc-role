@@ -112,10 +112,12 @@ export class DeepstreamService {
   }
 
   startGame() {
+    if(!this.gameState) return;
     this.ds.emitFromState('start-game', {}, this.gameState);
   }
 
   target(id: string) {
+    if(!this.gameState) return;
     this.ds.emitFromState('select-target', { id }, this.gameState);
   }
 
