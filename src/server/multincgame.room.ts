@@ -154,7 +154,7 @@ export class GameRoom<GameState> extends Room {
   }
 
   pickEnvironment() {
-    const environment = _(RegionCodex)
+    let environment = _(RegionCodex)
       .keys()
       .reject(region => {
         const highestLeveledPlayer = _.maxBy(this.state.game.players, 'level');
@@ -162,6 +162,8 @@ export class GameRoom<GameState> extends Room {
         return RegionCodex[region].maxLevel < highestLevel;
       })
       .sample();
+
+    if(!environment) environment = _.sample(_.keys(RegionCodex));
 
     this.state.game.environment = environment;
   }
