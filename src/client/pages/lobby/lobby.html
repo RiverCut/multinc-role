@@ -27,8 +27,12 @@
             <ion-title *ngIf="player">My Character</ion-title>
 
             <ion-buttons right *ngIf="player">
-              <button ion-button (click)="changeStyle()">
+              <button ion-button outline (click)="changeStyle()">
                 Change Style
+              </button>
+              <button ion-button icon-left outline (click)="automatic()">
+                <ion-icon [name]="player.automatic ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+                Automatic Play
               </button>
             </ion-buttons>
 
@@ -74,7 +78,7 @@
                      class="move-col"
                      [class.changeable]="i > 0"
                      [class.active]="selectedMove === i">
-              <div (click)="i > 0 && selectedMove = i">
+              <div (click)="selectMove(i)">
                 <action-sprite [name]="move"></action-sprite>
               </div>
               <div>

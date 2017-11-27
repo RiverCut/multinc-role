@@ -31,6 +31,7 @@ export class Player extends Combatant {
   public style: Style;
   public levels: { [key: string]: number };
   public styleMoves: { [key: string]: string[] };
+  public automatic: boolean;
 
   get level() {
     return this.levels[this.style];

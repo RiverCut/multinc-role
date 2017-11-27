@@ -3,6 +3,7 @@ import { Select } from 'ionic-angular';
 import { DeepstreamService } from '../../providers/deepstream.service';
 
 import * as _ from 'lodash';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-lobby',
@@ -17,6 +18,7 @@ export class LobbyPage {
 
   private update$;
   private roomUpdate$;
+  private autoCheck$;
 
   public allRoomInfo: any[] = [];
   public player;
@@ -80,11 +82,37 @@ export class LobbyPage {
 
       this.allRoomInfo = newRoomInfo || [];
     });
+
+    this.autoCheck$ = Observable.timer(0, _.random(1000, 3000))
+      .subscribe(() => {
+
+        // no auto while in menu
+        if(this.player) return;
+
+        this.deepstreamService.ds.client.record.getRecord(`players/${this.deepstreamService.ds.uid}`)
+          .whenReady(record => {
+            const { alreadyInGame, automatic } = record.get();
+            if(alreadyInGame || !automatic) return;
+
+            const chosenRoom = _.sample(this.allRoomInfo);
+            if(!chosenRoom) {
+              this.joinGame(null, true);
+
+              setTimeout(() => {
+                this.startGame();
+              }, 5000);
+
+            } else {
+              this.joinGame(chosenRoom.id);
+            }
+          });
+      });
   }
 
   ngOnDestroy() {
     this.update$.unsubscribe();
     this.roomUpdate$.unsubscribe();
+    this.autoCheck$.unsubscribe();
   }
 
   sendMessage() {
@@ -133,8 +161,8 @@ export class LobbyPage {
   }
 
   async _changeStyle($event) {
-    const newPlayer = await this.deepstreamService.changeStyle($event);
-    this.player = newPlayer;
+    const res = await this.deepstreamService.changeStyle($event);
+    if(res) this.player = res;
   }
 
   changeStyle() {
@@ -142,10 +170,22 @@ export class LobbyPage {
   }
 
   async levelUp() {
-    this.player = await this.deepstreamService.levelUp();
+    const res = await this.deepstreamService.levelUp();
+    if(res) this.player = res;
   }
 
   async buySkill(skill: string) {
-    this.player = await this.deepstreamService.buySkill(skill, this.selectedMove);
+    const res = await this.deepstreamService.buySkill(skill, this.selectedMove);
+    if(res) this.player = res;
+  }
+
+  selectMove(i) {
+    if(i <= 0) return;
+    this.selectedMove = i;
+  }
+
+  async automatic() {
+    const res = await this.deepstreamService.toggleAuto();
+    if(res) this.player = res;
   }
 }

@@ -123,6 +123,16 @@ export class LobbyRoom<LobbyState> extends Room {
       this.savePlayer(player);
       return player;
     });
+
+    this.on('change:auto', async (data, response) => {
+      response.ack();
+      const player = await this.loadPlayer(data.$$userId);
+
+      player.automatic = !player.automatic;
+
+      this.savePlayer(player);
+      return player;
+    });
   }
 
   onUninit() {

@@ -270,7 +270,7 @@ export class GameRoom<GameState> extends Room {
     this.tickOperation = {
       ticks: 40,
       earlyCheck: () => {
-        return _.every(gameState.players, p => !p.isAlive() || gameState.playerTargets[p.name]);
+        return _.every(gameState.players, p => !p.isAlive() || gameState.playerTargets[p.name] || p.automatic);
       },
       whenDone: () => {
         _.each(gameState.players, p => {
@@ -389,6 +389,10 @@ export class GameRoom<GameState> extends Room {
       };
       return true;
     }
+
+    this.state.game.players.forEach(p => {
+      if(p.hp <= 0) p.hp = 1;
+    });
 
     this.state.game.doMonstersGoFirstNextTurn = _.sample([true, false]);
     this.pickMonsters();

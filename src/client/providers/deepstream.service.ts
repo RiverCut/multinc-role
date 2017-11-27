@@ -120,23 +120,33 @@ export class DeepstreamService {
   }
 
   async getStats() {
+    if(!this.lobbyState) return;
     return this.ds.emitFromState('get-stats', {}, this.lobbyState);
   }
 
   async getBuyData() {
+    if(!this.lobbyState) return;
     return this.ds.emitFromState('get-buy-data', {}, this.lobbyState);
   }
 
   async changeStyle(style: string) {
+    if(!this.lobbyState) return;
     return this.ds.emitFromState('change:style', { style }, this.lobbyState);
   }
 
   async levelUp() {
+    if(!this.lobbyState) return;
     return this.ds.emitFromState('change:levelup', {}, this.lobbyState);
   }
 
   async buySkill(skill: string, index: number) {
+    if(!this.lobbyState) return;
     return this.ds.emitFromState('change:skill', { skill, index }, this.lobbyState);
+  }
+
+  async toggleAuto() {
+    if(!this.lobbyState) return;
+    return this.ds.emitFromState('change:auto', {}, this.lobbyState);
   }
 
 }
